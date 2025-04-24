@@ -169,9 +169,9 @@ export const commands: Chat.ChatCommands = {
     if (!this.runBroadcast()) return;
     this.sendReplyBox(
 		 `<div><b><center>Custom Color Commands</center></b>` +
-		 `<ul><li><code>/customcolor set [user],\t[hex]</code> - Gives [user] a custom color of [hex] (Requires: @ and higher)</li>` +
-		 `<li><code>/customcolor delete [user]</code> - Deletes a user's custom color (Requires: @ and higher)</li>` +
-		 `<li><code>/customcolor reload</code> - Reloads colors. (Requires: ~)</li>` +
+		 `<ul><li><code>/customcolor set [user],\t[hex]</code> - Gives [user] a custom color of [hex] (Requires: & and higher)</li>` +
+		 `<li><code>/customcolor delete [user]</code> - Deletes a user's custom color (Requires: & and higher)</li>` +
+		 `<li><code>/customcolor reload</code> - Reloads colors. (Requires: & & Higher)</li>` +
 		 `<li><code>/customcolor preview [user],\t[hex]</code> - Previews what that username looks like with [hex] as the color.</li>` +
 		 `</ul></div>`);
   },
