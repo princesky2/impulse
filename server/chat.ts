@@ -685,6 +685,10 @@ export class CommandContext extends MessageContext {
 			message = true;
 		}
 
+		/* Impulse Exp Function */
+		if (this.user.registered) Impulse.ExpSystem.addExp(this.user.id, 1);
+		/* Impulse Exp Function Ends */
+
 		this.update();
 
 		return message;
@@ -2076,6 +2080,9 @@ export const Chat = new class {
 		this.loadPlugin(Tournaments, 'tournaments');
 
 		this.loadPluginDirectory('dist/server/chat-plugins');
+		/* Load Impulse Plugins */
+		this.loadPluginDirectory('dist/impulse-plugins');
+		/* Load Impulse Plugins Ends */
 		Chat.oldPlugins = {};
 		// lower priority should run later
 		Utils.sortBy(Chat.filters, filter => -(filter.priority || 0));
