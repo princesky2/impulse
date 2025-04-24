@@ -35,6 +35,7 @@
         "./lib/*.ts",
         "./server/**/*.ts",
         "./server/**/*.tsx",
+        "./impulse-plugins/**/*.ts",
         "./sim/**/*",
         "./tools/set-import/*.ts",
         "./tools/modlog/*.ts",
