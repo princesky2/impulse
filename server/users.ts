@@ -1216,7 +1216,7 @@ export class User extends Chat.MessageContext {
 		// NOTE: can't do a this.update(...) at this point because we're no longer connected.
 	}
 	onDisconnect(connection: Connection) {
-		/* Impulse Seen Function */
+		/* Impulse Seen Function  */
 		if (this.named) {
 			Db.seen.set(this.id, Date.now());
 		}
