@@ -173,7 +173,7 @@ export const commands: Chat.ChatCommands = {
     this.sendReplyBox(
 		 `<div><b><center>Miscellaneous Commands</center></b>` +
 		 `<ul><li><code>/clearall</code> - Clears chatroom. (Requires: #)</li>` +
-		 `<li><code>/globalclearall</code> - Clears all chatrooms. (Requires: @ and higher)</li>` +
+		 `<li><code>/globalclearall</code> - Clears all chatrooms. (Requires: & and higher)</li>` +
 		 `<li><code>/poof</code> - Disconnect from server with random message.</li>` +
 		 `<li><code>/seen [user]</code> - Shows when the user last connected on the server.</li>` +
 		 `</ul></div>`);
