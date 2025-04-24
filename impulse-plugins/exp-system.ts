@@ -426,7 +426,7 @@ export const commands: Chat.Commands = {
   },
 
   giveexp(target, room, user) {
-    this.checkCan('globalban');
+    this.checkCan('manager');
     if (!target) return this.sendReply(`Usage: /giveexp [user], [amount], [reason]`);
     const parts = target.split(',').map(p => p.trim());
     if (parts.length < 2) return this.sendReply(`Usage: /giveexp [user], [amount], [reason]`);
@@ -463,7 +463,7 @@ export const commands: Chat.Commands = {
   },
 
   takeexp(target, room, user) {
-    this.checkCan('globalban');
+    this.checkCan('manager');
     if (!target) return this.sendReply(`Usage: /takeexp [user], [amount], [reason]`);
     const parts = target.split(',').map(p => p.trim());
     if (parts.length < 2) return this.sendReply(`Usage: /takeexp [user], [amount], [reason]`);
@@ -500,7 +500,7 @@ export const commands: Chat.Commands = {
   },
 
   resetexp(target, room, user) {
-    this.checkCan('globalban');
+    this.checkCan('manager');
     if (!target) return this.sendReply(`Usage: /resetexp [user], [reason]`);
     const parts = target.split(',').map(p => p.trim());
     const targetUser = Users.get(parts[0]);
@@ -525,7 +525,7 @@ export const commands: Chat.Commands = {
   },
 
   resetexpall(target, room, user) {
-    this.checkCan('globalban');
+    this.checkCan('manager');
     const reason = target.trim() || 'No reason specified.';
 
     ExpSystem.resetAllExp();
@@ -546,7 +546,7 @@ export const commands: Chat.Commands = {
   },
 
   toggledoubleexp(target, room, user) {
-    this.checkCan('globalban');
+    this.checkCan('manager');
     
     if (!target) {
       DOUBLE_EXP = !DOUBLE_EXP;
@@ -592,12 +592,12 @@ export const commands: Chat.Commands = {
       `<div><b><center>EXP System Commands By ${Impulse.nameColor('Prince Sky', true, true)}</center></b>` +
       `<ul>` +
       `<li><code>/level [user]</code> (Or <code>/exp</code>) - Check your or another user's EXP, current level, and EXP needed for the next level.</li>` +
-      `<li><code>/giveexp [user], [amount], [reason]</code> - Give a specified amount of EXP to a user. (Requires: @ and higher)</li>` +
-      `<li><code>/takeexp [user], [amount], [reason]</code> - Take a specified amount of EXP from a user. (Requires: @ and higher)</li>` +
-      `<li><code>/resetexp [user], [reason]</code> - Reset a user's EXP to ${DEFAULT_EXP}. (Requires: @ and higher)</li>` +
-      `<li><code>/resetexpall [reason]</code> - Reset all users' EXP to ${DEFAULT_EXP}. (Requires: @ and higher)</li>` +
+      `<li><code>/giveexp [user], [amount], [reason]</code> - Give a specified amount of EXP to a user. (Requires: & and higher)</li>` +
+      `<li><code>/takeexp [user], [amount], [reason]</code> - Take a specified amount of EXP from a user. (Requires: & and higher)</li>` +
+      `<li><code>/resetexp [user], [reason]</code> - Reset a user's EXP to ${DEFAULT_EXP}. (Requires: & and higher)</li>` +
+      `<li><code>/resetexpall [reason]</code> - Reset all users' EXP to ${DEFAULT_EXP}. (Requires: & and higher)</li>` +
       `<li><code>/expladder</code> - View the top 100 users with the most EXP and their levels.</li>` +
-      `<li><code>/toggledoubleexp [duration]</code> - Toggle double EXP with optional duration (e.g., "2 hours", "1 day", "30 minutes"). Use "off" to disable. (Requires: @ and higher)</li>` +
+      `<li><code>/toggledoubleexp [duration]</code> - Toggle double EXP with optional duration (e.g., "2 hours", "1 day", "30 minutes"). Use "off" to disable. (Requires: & and higher)</li>` +
       `</ul></div>`
     );
   },
