@@ -62,7 +62,7 @@ export class LadderTracker {
 		this.format = toID(config.format);
 		this.prefix = toID(config.prefix);
 		this.rating = config.rating || 0;
-		if (config.deadline) this.setDeadline(config.deadline);
+		if (config.deadline) this.setDeadline(config.deadline, false);
 
 		this.users = new Set(config.users);
 		this.leaderboard = { lookup: new Map() };
@@ -81,7 +81,7 @@ export class LadderTracker {
 		this.room.add(`|html|${msg}`).update();
 	}
 
-	setDeadline(argument: string) {
+	setDeadline(argument: string, save = true) {
 		const date = new Date(argument);
 		if (!+date) throw new Chat.ErrorMessage(`Invalid date: ${argument}`);
 
@@ -95,7 +95,7 @@ export class LadderTracker {
 			this.captureFinalLeaderboard();
 		}, (+this.deadline - Date.now()) - 500);
 
-		LadderTracker.save();
+		if (save) LadderTracker.save();
 	}
 
 	async captureFinalLeaderboard() {
@@ -167,6 +167,7 @@ export class LadderTracker {
 
 	tracking(battle: Rooms.RoomBattle, rating: number) {
 		const minElo = Math.floor(Number(battle.rated) || 0);
+		if (battle.format !== this.config.format) return false;
 		if (!minElo || minElo < 1000) {
 			return false;
 		}
@@ -381,7 +382,7 @@ export class LadderTracker {
 	}
 
 	togglePrefix(oldPrefix?: ID) {
-		if (this.room.settings.isPrivate === undefined) {
+		if (!this.room.settings.isPrivate) {
 			try {
 				if (oldPrefix) prefixManager.removePrefix(oldPrefix, 'privacy');
 			} catch {} // suppress errorMessages in case it's the first start and it hasn't been made priv yet
@@ -413,7 +414,7 @@ export class LadderTracker {
 	}
 }
 
-const trackers: Record<string, LadderTracker> = {};
+export const trackers: Record<string, LadderTracker> = {};
 try {
 	const data = JSON.parse(FS("config/chat-plugins/laddertrackers.json").readIfExistsSync() || "{}");
 	for (const roomid in data) {
@@ -481,7 +482,7 @@ export const commands: Chat.ChatCommands = {
 			LadderTracker.save();
 
 			this.sendReply("Ladder tracking started.");
-			this.modlog('LADDERTRACK', user, Object.entries(config).map(([k, v]) => `${k}=${v}`).join(', '));
+			this.modlog('LADDERTRACK', null, Object.entries(config).map(([k, v]) => `${k}=${v}`).join(', '));
 		},
 		top: 'leaderboard',
 		async leaderboard(target, room, user, sf, cmd) {
@@ -600,7 +601,7 @@ export const commands: Chat.ChatCommands = {
 			tracker.start();
 			LadderTracker.save();
 		},
-		stop(target, room, user, sf, cmd) {
+		pause(target, room, user, sf, cmd) {
 			const tracker = LadderTracker.getTracker(this);
 			this.checkCan('mute', null, tracker.room);
 			tracker.stop();
@@ -632,7 +633,7 @@ export const commands: Chat.ChatCommands = {
 	laddertrackhelp() {
 		this.runBroadcast();
 		this.sendReplyBox([
-			`- /laddertrack OR /ld displays a page to start a tracker (requires % in the room to do so).`,
+			`- /laddertrack OR /ld displays a page to start a tracker (requires # in the room to do so).`,
 			// ` (can also be used with key=value formatted args to start it directly - requires keys: rating, prefix, format, deadline, cutoff)`,
 			` - /laddertrack [leaderboard/top] - updates and displays the current leaderboard`,
 			` - /laddertrack deadline [optional date] - displays the current deadline, or sets the deadline to the given deadline if one is given (requires % to do so)`,
@@ -641,9 +642,10 @@ export const commands: Chat.ChatCommands = {
 			` - /laddertrack unwatch [list,of,users] - stops tracking the given user's battles (requires % to do so)`,
 			` - /laddertrack tracking - displays the current users being tracked`,
 			` - /laddertrack start - starts the tracker`,
-			` - /laddertrack stop - stops (pauses) the tracker`,
+			` - /laddertrack pause - temporarily pauses the tracker`,
 			` - /laddertrack endtrack - ends the tracker entirely`,
 			` - /laddertrack showdiffs - shows or hides differences between the current leaderboard and the previous leaderboard`,
+			`All commands require % to be used to edit settings, and can be used by anyone to view settings.`,
 		].join('<br />'));
 	},
 };
@@ -676,7 +678,7 @@ export const pages: Chat.PageTable = {
 };
 
 export const handlers: Chat.Handlers = {
-	onBattleEnd(battle, winner, players) {
+	onBattleCreate(battle, players) {
 		for (const tracker of Object.values(trackers)) {
 			tracker.handleBattleEnd(battle);
 		}
