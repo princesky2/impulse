@@ -12,7 +12,7 @@
 import { FS } from '../lib/fs';
 
 const GITHUB_API_URL = 'https://api.github.com/gists';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const WHITELISTED_USERS = new Set(['princesky', 'musaddiktemkar']);
 const REQUIRED_ROOM = ['development', 'staff'];
 
